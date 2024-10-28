@@ -3,10 +3,10 @@ import * as path from 'path';
 import * as http from 'http';
 import { IncomingMessage, ServerResponse } from 'http';
 
+const baseDir = path.resolve('front');
 
 export const httpServer = http.createServer((req: IncomingMessage, res: ServerResponse) => {
-    const baseDir = path.resolve(path.dirname(''));
-    const filePath = path.join(baseDir, req.url === '/' ? '/front/index.html' : `/front${req.url}`);
+    const filePath = path.join(baseDir, req.url === '/' ? '/index.html' : req.url || '');
 
     fs.readFile(filePath, (err, data) => {
         if (err) {

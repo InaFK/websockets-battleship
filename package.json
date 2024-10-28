@@ -2,11 +2,10 @@
     "name": "ws_task",
     "version": "1.0.0",
     "description": "Template for the WebSocket remote control task | WebSocket Battleship Game",
-    "main": "dist/index.js",
     "type": "module",
     "scripts": {
         "start": "tsx index.ts",
-        "start:dev": "nodemon --watch 'src/**/*.ts' src/index.ts",
+        "start:dev": "nodemon --watch 'src/**/*.ts' index.ts",
         "build": "tsc",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
@@ -19,12 +18,14 @@
         "eslint": "^8.57.1",
         "nodemon": "^3.1.7",
         "prettier": "^3.3.3",
+        "ts-node": "^10.9.2",
         "ts-node-dev": "^2.0.0",
         "tsx": "^4.19.2",
         "typescript": "^5.6.3"
     },
     "dependencies": {
         "@types/ws": "^8.5.12",
+        "cross-env": "^7.0.3",
         "dotenv": "^16.4.5",
         "ws": "^8.18.0"
     }

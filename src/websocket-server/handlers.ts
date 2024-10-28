@@ -17,9 +17,19 @@ export const handleConnection = (ws: WebSocket) => {
 
 export const handleMessage = (ws: WebSocket, message: string) => {
     console.log(`Received message: ${message}`);
+    
+    if (!message) {
+        console.error('Received empty or undefined message');
+        return;
+    }
 
     try {
         const parsedMessage = JSON.parse(message);
+
+        if (typeof parsedMessage !== 'object' || !parsedMessage.type) {
+            ws.send(JSON.stringify({ type: 'error', message: 'Message must have a type field.' }));
+            return;
+        }
 
         console.log(`Processing command: ${parsedMessage.type}`);
 
@@ -52,8 +62,19 @@ export const handleDisconnection = (ws: WebSocket) => {
     }
 };
 
-function handleRegistration(ws: WebSocket, message: { name: string; password: string }) {
+function handleRegistration(ws: WebSocket, message: { name?: string; password?: string }) {
     const { name, password } = message;
+
+    if (!name || !password) {
+        const errorResponse = {
+            type: 'reg',
+            status: 'error',
+            message: 'Name and password are required.'
+        };
+        ws.send(JSON.stringify(errorResponse));
+        return;
+    }
+
     console.log(`Registering user: ${name} with password: ${password}`);
 
     const response = { type: 'reg', status: 'success', message: 'Login successful!', userId: name };

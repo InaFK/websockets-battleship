@@ -9,6 +9,8 @@ export const handleConnection = (ws: WebSocket) => {
     console.log(`New client connected with ID: ${clientId}`);
 
     ws.send(JSON.stringify({ message: `Welcome, client ${clientId}!` }));
+
+    (ws as any).clientId = clientId;
 };
 
 export const handleMessage = (ws: WebSocket, message: string) => {
@@ -30,23 +32,28 @@ export const handleMessage = (ws: WebSocket, message: string) => {
     }
 };
 
+export const handleDisconnection = (ws: WebSocket) => {
+    const clientId = (ws as any).clientId;
+    if (clientId && clients.has(clientId)) {
+        clients.delete(clientId);
+        console.log(`Client ${clientId} disconnected`);
+        broadcastMessage(`Client ${clientId} has left the game.`);
+    }
+};
+
 function handleRegistration(ws: WebSocket, message: { name: string; password: string }) {
     const { name, password } = message;
-
     console.log(`Registering user: ${name} with password: ${password}`);
 
     ws.send(JSON.stringify({ message: 'Login successful!', type: 'reg', userId: name }));
-
     broadcastMessage(`User ${name} has joined the game.`);
 }
 
 function handleRoomCreation(ws: WebSocket, message: any) {
-    // Implement room creation logic here
     console.log('Room creation request received', ws, message);
 }
 
 function handleAttack(ws: WebSocket, message: any) {
-    // Implement attack logic here
     console.log('Attack request received', ws, message);
 }
 
